@@ -89,6 +89,9 @@ class TimeZoneFieldBase(models.Field):
         "Convert to pytz timezone object"
         return self._get_python_and_db_repr(value)[0]
 
+    def from_db_value(self, value, *args, **kwargs):
+        return self.to_python(value)
+
     def get_prep_value(self, value):
         "Convert to string describing a valid pytz timezone object"
         return self._get_python_and_db_repr(value)[1]
@@ -107,7 +110,5 @@ class TimeZoneFieldBase(models.Field):
         raise ValidationError("Invalid timezone '%s'" % value)
 
 
-# http://packages.python.org/six/#six.with_metaclass
-class TimeZoneField(six.with_metaclass(models.SubfieldBase,
-                                       TimeZoneFieldBase)):
+class TimeZoneField(TimeZoneFieldBase):
     pass
